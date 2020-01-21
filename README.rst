@@ -31,7 +31,7 @@ Overview
     :alt: Requirements Status
     :target: https://requires.io/github/vgoehler/python-i3-battery-block/requirements/?branch=master
 
-.. |codecov| image:: https://codecov.io/github/vgoehler/python-i3-battery-block/coverage.svg?branch=master
+.. |codecov| image:: https://codecov.io/gh/vgoehler/python-i3-battery-block/branch/master/graphs/badge.svg?branch=master
     :alt: Coverage Status
     :target: https://codecov.io/github/vgoehler/python-i3-battery-block
 
