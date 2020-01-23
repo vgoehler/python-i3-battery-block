@@ -1,5 +1,5 @@
-import argparse
 import logging
+
 import pytest
 
 from i3_battery_block import cli

@@ -1,6 +1,7 @@
 import pytest
 
-from i3_battery_block.battery import wrap_span, color
+from i3_battery_block.html_formatter import color
+from i3_battery_block.html_formatter import wrap_span
 
 
 def test_wrap():
@@ -11,6 +12,8 @@ def test_wrap_with_color():
     assert wrap_span("a",
                      "b") == "<span font='FontAwesome' col='b'>a</span>", "String should be wrapped into span " \
                                                                             "element! "
+
+
 @pytest.mark.parametrize(
     "smaller_then, expected",
     [
