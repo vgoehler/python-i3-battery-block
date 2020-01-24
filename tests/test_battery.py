@@ -12,6 +12,7 @@ from i3_battery_block.font_awesome_glyphs import FA_QUESTION
 from i3_battery_block.html_formatter import color
 from i3_battery_block.html_formatter import wrap_span
 from i3_battery_block.html_formatter import wrap_span_battery_header
+from i3_battery_block.html_formatter import wrap_span_bug
 from i3_battery_block.html_formatter import wrap_span_fa
 
 
@@ -72,3 +73,42 @@ def test_prepare_output_discharging():
                 35
                 )
     assert prepare_output(sut) == expected, "output is not according to specifications"
+
+
+def test_for_remove_of_battery_bug():
+    # first battery discharging with 70% and second battery unknown with 0%
+    sut = [
+        {"state": 'Full', 'percentage': 100, 'time': None, 'unavailable': False},
+        {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': True},
+        {"state": 'Unknown', 'percentage': 88, 'time': None, 'unavailable': False},
+    ]
+    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+                wrap_span("94%", color(94)),
+                94
+                )
+    assert prepare_output(sut) == expected, "output is not according to specifications"
+
+
+def test_for_remove_of_battery_bug_with_indicator():
+    # first battery discharging with 70% and second battery unknown with 0%
+    sut = [
+        {"state": 'Full', 'percentage': 100, 'time': None, 'unavailable': False},
+        {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': True},
+        {"state": 'Unknown', 'percentage': 88, 'time': None, 'unavailable': False},
+    ]
+    expected = (wrap_span_bug() +
+                wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+                wrap_span("94%", color(94)),
+                94
+                )
+    assert prepare_output(sut, show_bug=True) == expected, "output is not according to specifications"
+
+
+def test_average_without_bug():
+    assert battery.__calculate_avg_percentage(150, 2, False) == 75, "average is wrong"
+
+
+def test_average_with_bug():
+    assert battery.__calculate_avg_percentage(150, 3, True) == 75, "average is wrong"

@@ -14,6 +14,18 @@ def test_compact():
 def test_compact_negated():
     sut = cli.CLI()
     sut.parse(args=[])
+    assert sut.args.show_bug is False, "show bug flag should be false"
+
+
+def test_show_bug():
+    sut = cli.CLI()
+    sut.parse(args=['--show_bug'])
+    assert sut.args.show_bug is True, "show bug flag should be true"
+
+
+def test_show_bug_negated():
+    sut = cli.CLI()
+    sut.parse(args=[])
     assert sut.args.compact is False, "Compact flag should be false"
 
 

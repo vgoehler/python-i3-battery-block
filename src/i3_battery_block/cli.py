@@ -32,7 +32,8 @@ class CLI:
                                               )
         self.parser.add_argument('-c', '--compact', action='store_true',
                                  help="flag for compact mode, truncates all batteries into one")
-        # TODO implement this
+        self.parser.add_argument('-b', '--show_bug', action='store_true',
+                                 help="This will show a marker if the acpi bug has occurred.")
         self.parser.add_argument('-l', '--loglevel', help="log level",
                                  choices=["debug", "info", "warning", "error", "critical"],
                                  type=str,
@@ -50,6 +51,10 @@ class CLI:
     def is_compact(self) -> bool:
         return self.args.compact
 
+    @property
+    def show_bug(self) -> bool:
+        return self.args.show_bug
+
 
 def main(args=None):
     cli = CLI()
@@ -57,4 +62,4 @@ def main(args=None):
 
     logging.basicConfig(level=cli.get_log_level)
 
-    battery.main(cli.is_compact)
+    battery.main(cli.is_compact, cli.show_bug)

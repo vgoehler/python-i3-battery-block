@@ -17,6 +17,7 @@ from i3_battery_block.html_formatter import color
 from i3_battery_block.html_formatter import discern_loading_state
 from i3_battery_block.html_formatter import wrap_span
 from i3_battery_block.html_formatter import wrap_span_battery_header
+from i3_battery_block.html_formatter import wrap_span_bug
 
 
 def get_power_status() -> str:
@@ -36,46 +37,14 @@ def refine_input(status_line: str) -> Dict[str, Any]:
             'unavailable': group['rate_info'] == "rate information unavailable"}
 
 
-def prepare_output(batteries: List[Dict[str, Any]]) -> Tuple[str, int]:
-    """
-    Each Battery gets its own block, where the state (charging or discharging) and then
-    the image of the battery percentage is shown. After all the percentage of the whole System and the charge_discharge_timer
-    (to charge or discharge) is put.
-    :param batteries:  a list of battery dictionaries (as refine_input returns)
-    :return: the format string
-    """
-    charge_discharge_timer = None  # only one battery is showing these information
-    avg_percentage = 0
-    full_text = []
-    nr = 0
-    for battery in batteries:
-        nr += 1
-        avg_percentage += battery['percentage']
-        # if charge_discharge_timer not already set, set it if its there
-        if not charge_discharge_timer and battery['time']:
-            charge_discharge_timer = battery['time']
-        # set full_text
-        full_text.append(wrap_span_battery_header(nr) +
-                         STATUS_SPANS[battery['state']] +
-                         discern_loading_state(battery['percentage'])
-                         )
-    avg_percentage = avg_percentage // len(batteries)
-    full_text.append(wrap_span("%s%%" % avg_percentage, col=color(avg_percentage)))
-
-    if charge_discharge_timer:
-        full_text.append(wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M")))
-
-    return "".join(full_text), avg_percentage
-
-
-def distill_text(status: str) -> Tuple[str, int]:
+def distill_text(status: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, int]:
     if status:
         batteries = []
         for battery in status.split("\n"):
             if battery != '':
                 batteries.append(refine_input(battery))
 
-        full_text, avg_percentage = prepare_output(batteries)
+        full_text, avg_percentage = prepare_output(batteries, compact=compact, show_bug=show_bug)
 
     else:
         # stands for no battery found
@@ -94,13 +63,56 @@ def output(output_text: str):
     print(output_text)
 
 
-def main(compact: bool = False):
-    # TODO implement compact
-    # TODO implement filter for battery bug
+def main(compact: bool = False, show_bug: bool = False):
     status = get_power_status()
-    text, percent_left = distill_text(status)
+    text, percent_left = distill_text(status, compact=compact, show_bug=show_bug)
 
     output(text)
 
     if percent_left < 10:
         exit(33)  # red background
+
+
+def prepare_output(batteries: List[Dict[str, Any]], compact: bool = False, show_bug: bool = False) -> Tuple[str, int]:
+    """
+    Each Battery gets its own block, where the state (charging or discharging) and then the image of the battery
+    percentage is shown. After all the percentage of the whole System and the charge_discharge_timer (to charge or
+    discharge) is put. :param compact: :param show_bug: :param batteries:  a list of battery dictionaries (as
+    refine_input returns) :return: the format string
+    """
+    charge_discharge_timer = None  # only one battery is showing these information
+    avg_percentage = 0
+    full_text = []
+    nr = 0
+    bug_occurred = False
+    for battery in batteries:
+        # battery bug gate
+        if battery['unavailable'] and battery['state'] == 'Unknown':
+            bug_occurred = True
+            if show_bug:
+                # bug icon in orange as first entry
+                full_text.insert(0, wrap_span_bug())
+            continue
+
+        nr += 1
+        avg_percentage += battery['percentage']
+        # if charge_discharge_timer not already set, set it if its there
+        if not charge_discharge_timer and battery['time']:
+            charge_discharge_timer = battery['time']
+        # set full_text
+        full_text.append(wrap_span_battery_header(nr) +
+                         STATUS_SPANS[battery['state']] +
+                         discern_loading_state(battery['percentage'])
+                         )
+
+    avg_percentage = __calculate_avg_percentage(avg_percentage, len(batteries), bug_occurred)
+    full_text.append(wrap_span("%s%%" % avg_percentage, col=color(avg_percentage)))
+
+    if charge_discharge_timer:
+        full_text.append(wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M")))
+
+    return "".join(full_text), avg_percentage
+
+
+def __calculate_avg_percentage(percentage_sum: int, battery_count: int, bug_occurred: bool) -> int:
+    return percentage_sum // (battery_count - 1 if bug_occurred else battery_count)

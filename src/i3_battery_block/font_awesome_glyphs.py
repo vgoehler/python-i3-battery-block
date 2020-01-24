@@ -1,6 +1,7 @@
 FA_QUESTION = '\uf128'
 FA_LAPTOP = '\uf109'
 FA_PLUG = '\uf1e6'
+FA_BUG = '\uf188'
 FA_BATTERY_LIST = [
     "\uf244",  # empty
     "\uf243",  # 1 quarter
