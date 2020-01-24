@@ -18,6 +18,8 @@ Why does this file exist, and why not put this in __main__?
 import argparse
 import logging
 
+from i3_battery_block import battery
+
 
 class CLI:
     """The command line interface"""
@@ -55,5 +57,4 @@ def main(args=None):
 
     logging.basicConfig(level=cli.get_log_level)
 
-    # TODO output logic here
-    print(cli.args)
+    battery.main(cli.is_compact)

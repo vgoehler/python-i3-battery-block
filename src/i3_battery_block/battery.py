@@ -95,6 +95,8 @@ def output(output_text: str):
 
 
 def main(compact: bool = False):
+    # TODO implement compact
+    # TODO implement filter for battery bug
     status = get_power_status()
     text, percent_left = distill_text(status)
 
