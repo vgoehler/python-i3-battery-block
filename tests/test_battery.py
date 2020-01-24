@@ -17,9 +17,13 @@ from i3_battery_block.html_formatter import wrap_span_fa
 
 def test_get_power_status():
     # this should retrieve acpi output
-    sut = battery.get_power_status()
-    expected = subprocess.run("acpi", capture_output=True, universal_newlines=True)
-    assert sut == expected.stdout, "both outputs should be from acpi and equal"
+    try:
+        sut = battery.get_power_status()
+        expected = subprocess.run("acpi", capture_output=True, universal_newlines=True)
+        assert sut == expected.stdout, "both outputs should be from acpi and equal"
+    except FileNotFoundError as e:
+        # if no acpi is there (ci server) test for correct error message
+        assert e.errno == 2 and e.strerror.find('acpi') != -1, "extraordinary failure"
 
 
 def test_distill_text_empty():
