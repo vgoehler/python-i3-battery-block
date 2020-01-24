@@ -37,43 +37,50 @@ def refine_input(status_line: str) -> Dict[str, Any]:
             'unavailable': group['rate_info'] == "rate information unavailable"}
 
 
-def distill_text(status: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, int]:
+def distill_text(status: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
     if status:
         batteries = []
         for battery in status.split("\n"):
             if battery != '':
                 batteries.append(refine_input(battery))
 
-        full_text, avg_percentage = prepare_output(batteries, compact=compact, show_bug=show_bug)
+        full_text = []
+        small_text = []
+        avg_percentage = prepare_output(batteries, full_text, small_text, compact=compact, show_bug=show_bug)
+
+        full_text = "".join(full_text)
+        small_text = "".join(small_text)
 
     else:
         # stands for no battery found
         full_text = wrap_span(FA_NO_BATTERY, "red")
+        small_text = full_text
         avg_percentage = 100
-    return full_text, avg_percentage
+    return full_text, small_text, avg_percentage
 
 
-def output(output_text: str):
+def output(full_text: str, small_text: str):
     # from blocks documentation:
     # the 1st line updates the generate_full_text;
     # the 2nd line updates the short_text;
     # the 3rd line updates the color;
     # the 4th line updates the background.
-    print(output_text)
-    print(output_text)
+    print(full_text)
+    print(small_text)
 
 
 def main(compact: bool = False, show_bug: bool = False):
     status = get_power_status()
-    text, percent_left = distill_text(status, compact=compact, show_bug=show_bug)
+    full_text, small_text, percent_left = distill_text(status, compact=compact, show_bug=show_bug)
 
-    output(text)
+    output(full_text, small_text)
 
     if percent_left < 10:
         exit(33)  # red background
 
 
-def prepare_output(batteries: List[Dict[str, Any]], compact: bool = False, show_bug: bool = False) -> Tuple[str, int]:
+def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_text: List[str], compact: bool = False,
+                   show_bug: bool = False) -> int:
     """
     Each Battery gets its own block, where the state (charging or discharging) and then the image of the battery
     percentage is shown. After all the percentage of the whole System and the charge_discharge_timer (to charge or
@@ -82,7 +89,6 @@ def prepare_output(batteries: List[Dict[str, Any]], compact: bool = False, show_
     """
     charge_discharge_timer = None  # only one battery is showing these information
     avg_percentage = 0
-    full_text = []
     nr = 0
     bug_occurred = False
     for battery in batteries:
@@ -91,7 +97,9 @@ def prepare_output(batteries: List[Dict[str, Any]], compact: bool = False, show_
             bug_occurred = True
             if show_bug:
                 # bug icon in orange as first entry
-                full_text.insert(0, wrap_span_bug())
+                span_bug = wrap_span_bug()
+                full_text.insert(0, span_bug)
+                small_text.insert(0, span_bug)
             continue
 
         nr += 1
@@ -111,7 +119,7 @@ def prepare_output(batteries: List[Dict[str, Any]], compact: bool = False, show_
     if charge_discharge_timer:
         full_text.append(wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M")))
 
-    return "".join(full_text), avg_percentage
+    return avg_percentage
 
 
 def __calculate_avg_percentage(percentage_sum: int, battery_count: int, bug_occurred: bool) -> int:

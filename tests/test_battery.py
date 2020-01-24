@@ -29,7 +29,8 @@ def test_get_power_status():
 
 def test_distill_text_empty():
     # this should output text for no battery found
-    expected = (wrap_span(FA_NO_BATTERY, "red"), 100)
+    no_battery = wrap_span(FA_NO_BATTERY, "red")
+    expected = (no_battery, no_battery, 100)
     assert distill_text('') == expected, "no battery output should be given"
 
 
@@ -39,12 +40,14 @@ def test_prepare_output_charging():
         {"state": 'Charging', 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
         {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + wrap_span_fa(FA_BATTERY_LIST[3]) +
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]) +
-                wrap_span("35%", color(35)) + wrap_span("(01:33)"),
-                35
-                )
-    assert prepare_output(sut) == expected, "output is not according to specifications"
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + wrap_span_fa(FA_BATTERY_LIST[3]),
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]),
+                wrap_span("35%", color(35)),
+                wrap_span("(01:33)")
+                ]
+    input_list = []
+    prepare_output(sut, input_list, [])
+    assert input_list == expected, "output is not according to specifications"
 
 
 def test_prepare_output_full():
@@ -53,12 +56,13 @@ def test_prepare_output_full():
         {"state": 'Full', 'percentage': 100, 'time': None, 'unavailable': False},
         {"state": 'Unknown', 'percentage': 100, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) +
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]),
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]),
                 wrap_span("100%", color(100)),
-                100
-                )
-    assert prepare_output(sut) == expected, "output is not according to specifications"
+                ]
+    input_list = []
+    prepare_output(sut, input_list, [])
+    assert input_list == expected, "output is not according to specifications"
 
 
 def test_prepare_output_discharging():
@@ -67,12 +71,14 @@ def test_prepare_output_discharging():
         {"state": 'Discharging', 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
         {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + wrap_span_fa(FA_BATTERY_LIST[3]) +
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]) +
-                wrap_span("35%", color(35)) + wrap_span("(01:33)"),
-                35
-                )
-    assert prepare_output(sut) == expected, "output is not according to specifications"
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + wrap_span_fa(FA_BATTERY_LIST[3]),
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]),
+                wrap_span("35%", color(35)),
+                wrap_span("(01:33)"),
+                ]
+    input_list = []
+    prepare_output(sut, input_list, [])
+    assert input_list == expected, "output is not according to specifications"
 
 
 def test_for_remove_of_battery_bug():
@@ -82,12 +88,13 @@ def test_for_remove_of_battery_bug():
         {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': True},
         {"state": 'Unknown', 'percentage': 88, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) +
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]),
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]),
                 wrap_span("94%", color(94)),
-                94
-                )
-    assert prepare_output(sut) == expected, "output is not according to specifications"
+                ]
+    input_list = []
+    prepare_output(sut, input_list, [])
+    assert input_list == expected, "output is not according to specifications"
 
 
 def test_for_remove_of_battery_bug_with_indicator():
@@ -97,13 +104,14 @@ def test_for_remove_of_battery_bug_with_indicator():
         {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': True},
         {"state": 'Unknown', 'percentage': 88, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_bug() +
-                wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) +
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+    expected = [wrap_span_bug(),
+                wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]),
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]),
                 wrap_span("94%", color(94)),
-                94
-                )
-    assert prepare_output(sut, show_bug=True) == expected, "output is not according to specifications"
+                ]
+    input_list = []
+    prepare_output(sut, input_list, [], show_bug=True)
+    assert input_list == expected, "output is not according to specifications"
 
 
 def test_average_without_bug():
