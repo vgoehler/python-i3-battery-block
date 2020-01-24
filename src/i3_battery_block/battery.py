@@ -56,7 +56,11 @@ def distill_text(status: str, compact: bool = False, show_bug: bool = False) -> 
         full_text = wrap_span(FA_NO_BATTERY, "red")
         small_text = full_text
         avg_percentage = 100
-    return full_text, small_text, avg_percentage
+
+    if compact:
+        return small_text, small_text, avg_percentage
+    else:
+        return full_text, small_text, avg_percentage
 
 
 def output(full_text: str, small_text: str):
@@ -113,13 +117,34 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
                          discern_loading_state(battery['percentage'])
                          )
 
+    system_state = discern_system_states([b['state'] for b in batteries])
+    small_text.append(STATUS_SPANS[system_state])
+
     avg_percentage = __calculate_avg_percentage(avg_percentage, len(batteries), bug_occurred)
-    full_text.append(wrap_span("%s%%" % avg_percentage, col=color(avg_percentage)))
+    col = color(avg_percentage)
+    full_text.append(wrap_span("%s%%" % avg_percentage, col=col))
+    small_text.append(discern_loading_state(avg_percentage, color=col))
 
     if charge_discharge_timer:
-        full_text.append(wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M")))
+        time_span = wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M"))
+        full_text.append(time_span)
+        small_text.append(time_span)
 
     return avg_percentage
+
+
+def discern_system_states(states: List[str]) -> str:
+    # in case only one entry, or only the same entries, reduce and return
+    state_set = set(states)
+    if len(state_set) == 1:
+        return state_set.pop()
+    # if charging or discharging is in list then return this
+    for state in ['Charging', 'Discharging']:
+        if state_set.issuperset([state]):
+            return state
+    if state_set.issuperset(['Full']):
+        return 'Full'
+    raise NotImplementedError("This should not happen. All States are set.")
 
 
 def __calculate_avg_percentage(percentage_sum: int, battery_count: int, bug_occurred: bool) -> int:

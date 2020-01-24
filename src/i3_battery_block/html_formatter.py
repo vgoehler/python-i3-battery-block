@@ -69,13 +69,14 @@ STATUS_SPANS = {
 }
 
 
-def discern_loading_state(percentage: int) -> str:
+def discern_loading_state(percentage: int, color: str = None) -> str:
     """
     returns the appropriate icon for the load
+    :param color: an optional color for the span element
     :param percentage: for the load status of the battery
     :return: a span element
     """
     idx = len(FA_BATTERY_LIST) * percentage // 100
     # 100 % produces one not valid entry
     idx = len(FA_BATTERY_LIST) - 1 if idx == len(FA_BATTERY_LIST) else idx
-    return wrap_span_fa(FA_BATTERY_LIST[idx])
+    return wrap_span_fa(FA_BATTERY_LIST[idx], col=color)
