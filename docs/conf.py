@@ -20,7 +20,7 @@ project = 'i3-battery-block'
 year = '2019-2020'
 author = 'Volker G Göhler'
 copyright = '{0}, {1}'.format(year, author)
-version = release = '0.0.0'
+version = release = '0.1.0'
 
 pygments_style = 'trac'
 templates_path = ['.']

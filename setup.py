@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 
 setup(
     name='i3-battery-block',
-    version='0.0.0',
+    version='0.1.0',
     license='BSD-2-Clause',
     description='An i3 wm block for showing the battery status. Based on battery2 from James Murphy. '
                 'https://github.com/vivien/i3blocks-contrib]',
