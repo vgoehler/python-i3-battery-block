@@ -9,3 +9,4 @@ FA_BATTERY_LIST = [
     "\uf241",  # 3 quarters
     "\uf240",  # full
 ]
+FA_NO_BATTERY = "\uf00d " + FA_BATTERY_LIST[4]
