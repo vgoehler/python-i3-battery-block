@@ -1,4 +1,7 @@
-from i3_battery_block.font_awesome_glyphs import FA_PLUG, FA_LAPTOP, FA_QUESTION, FA_BATTERY_LIST
+from i3_battery_block.font_awesome_glyphs import FA_BATTERY_LIST
+from i3_battery_block.font_awesome_glyphs import FA_LAPTOP
+from i3_battery_block.font_awesome_glyphs import FA_PLUG
+from i3_battery_block.font_awesome_glyphs import FA_QUESTION
 
 
 def wrap_span(text: str, col: str = None, font: str = None) -> str:
@@ -20,6 +23,7 @@ def wrap_span_fa(text: str, col: str = None, font: str = 'FontAwesome') -> str:
 
 def wrap_span_battery_header(id_nr: int) -> str:
     return wrap_span(str(id_nr), col="#BFBFBF")
+
 
 def color(percent: int):
     """

@@ -2,9 +2,17 @@ import subprocess
 from datetime import time
 
 from i3_battery_block import battery
-from i3_battery_block.battery import distill_text, refine_input, prepare_output
-from i3_battery_block.font_awesome_glyphs import FA_NO_BATTERY, FA_BATTERY_LIST, FA_PLUG, FA_QUESTION, FA_LAPTOP
-from i3_battery_block.html_formatter import wrap_span, color, wrap_span_fa, wrap_span_battery_header
+from i3_battery_block.battery import distill_text
+from i3_battery_block.battery import prepare_output
+from i3_battery_block.font_awesome_glyphs import FA_BATTERY_LIST
+from i3_battery_block.font_awesome_glyphs import FA_LAPTOP
+from i3_battery_block.font_awesome_glyphs import FA_NO_BATTERY
+from i3_battery_block.font_awesome_glyphs import FA_PLUG
+from i3_battery_block.font_awesome_glyphs import FA_QUESTION
+from i3_battery_block.html_formatter import color
+from i3_battery_block.html_formatter import wrap_span
+from i3_battery_block.html_formatter import wrap_span_battery_header
+from i3_battery_block.html_formatter import wrap_span_fa
 
 
 def test_get_power_status():
@@ -26,8 +34,8 @@ def test_prepare_output_charging():
         {"state": 'Charging', 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
         {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + wrap_span_fa(FA_BATTERY_LIST[3]) + \
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]) + \
+    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + wrap_span_fa(FA_BATTERY_LIST[3]) +
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]) +
                 wrap_span("35%", color(35)) + wrap_span("(01:33)"),
                 35
                 )
@@ -40,8 +48,8 @@ def test_prepare_output_full():
         {"state": 'Full', 'percentage': 100, 'time': None, 'unavailable': False},
         {"state": 'Unknown', 'percentage': 100, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) + \
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) + \
+    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]) +
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]) +
                 wrap_span("100%", color(100)),
                 100
                 )
@@ -54,15 +62,9 @@ def test_prepare_output_discharging():
         {"state": 'Discharging', 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
         {"state": 'Unknown', 'percentage': 0, 'time': None, 'unavailable': False},
     ]
-    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + wrap_span_fa(FA_BATTERY_LIST[3]) + \
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]) + \
+    expected = (wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + wrap_span_fa(FA_BATTERY_LIST[3]) +
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]) +
                 wrap_span("35%", color(35)) + wrap_span("(01:33)"),
                 35
                 )
     assert prepare_output(sut) == expected, "output is not according to specifications"
-
-# def test_distill_text_discharge():
-#    status = 'Battery 0: Full, 100%\n' \
-#            'Battery 1: Discharging, 88%, 00:50:14 remaining\n'
-#    expected = (wrap_span("0 %s 1 %s" % (FA_BATTERY_LIST[4], FA_BATTERY_LIST[3])) + wrap_span("94%%", color(94)), 94)
-#    assert distill_text(status) == expected, "expected discharge text"
