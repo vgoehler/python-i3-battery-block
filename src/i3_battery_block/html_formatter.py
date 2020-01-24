@@ -1,13 +1,25 @@
-def wrap_span(text: str, col: str = None) -> str:
+from i3_battery_block.font_awesome_glyphs import FA_PLUG, FA_LAPTOP, FA_QUESTION, FA_BATTERY_LIST
+
+
+def wrap_span(text: str, col: str = None, font: str = None) -> str:
     """
     This wraps a span element around an input text.
 
-    :type text: string, the text that should be wraped in the span
+    :param font: string, the font to use for the span element
+    :type text: string, the text that should be wrapped in the span
     :type col: string, a html color string
     """
     color_text = " col='%s'" % col if col else ""
-    return "<span font='FontAwesome'%s>%s</span>" % (color_text, text)
+    font_text = " font='%s'" % font if font else ""
+    return "<span%s%s>%s</span>" % (font_text, color_text, text)
 
+
+def wrap_span_fa(text: str, col: str = None, font: str = 'FontAwesome') -> str:
+    return wrap_span(text, col=col, font=font)
+
+
+def wrap_span_battery_header(id_nr: int) -> str:
+    return wrap_span(str(id_nr), col="#BFBFBF")
 
 def color(percent: int):
     """
@@ -40,3 +52,21 @@ __COLOR_MAP = {
     9: "#FFFFFF",
     10: "#FFFFFF",
 }
+STATUS_SPANS = {
+    "Charging": wrap_span_fa(FA_PLUG, "yellow"),
+    "Discharging": wrap_span_fa(FA_LAPTOP),
+    "Unknown": wrap_span_fa(FA_QUESTION),
+    "Full": wrap_span_fa(FA_PLUG)
+}
+
+
+def discern_loading_state(percentage: int) -> str:
+    """
+    returns the appropriate icon for the load
+    :param percentage: for the load status of the battery
+    :return: a span element
+    """
+    idx = len(FA_BATTERY_LIST) * percentage // 100
+    # 100 % produces one not valid entry
+    idx = len(FA_BATTERY_LIST) - 1 if idx == len(FA_BATTERY_LIST) else idx
+    return wrap_span_fa(FA_BATTERY_LIST[idx])

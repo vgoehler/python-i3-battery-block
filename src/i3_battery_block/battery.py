@@ -6,26 +6,11 @@
 import re
 from datetime import time
 from subprocess import check_output
-from typing import Tuple, Dict, Any
+from typing import Tuple, Dict, Any, List
 
-from i3_battery_block.font_awesome_glyphs import FA_BATTERY, FA_NO_BATTERY
-from i3_battery_block.font_awesome_glyphs import FA_LIGHTNING
-from i3_battery_block.font_awesome_glyphs import FA_PLUG
-from i3_battery_block.font_awesome_glyphs import FA_QUESTION
-from i3_battery_block.html_formatter import color
+from i3_battery_block.font_awesome_glyphs import FA_NO_BATTERY
+from i3_battery_block.html_formatter import STATUS_SPANS, discern_loading_state, color, wrap_span_battery_header
 from i3_battery_block.html_formatter import wrap_span
-
-# stands for charging
-FA_LIGHTNING_SPAN = wrap_span(FA_LIGHTNING, "yellow")
-
-# stands for plugged in
-FA_PLUG_SPAN = wrap_span(FA_PLUG)
-
-# stands for using battery
-FA_BATTERY_SPAN = wrap_span(FA_BATTERY)
-
-# stands for unknown status of battery
-FA_QUESTION_SPAN = wrap_span(FA_QUESTION)
 
 
 def get_power_status() -> str:
@@ -45,70 +30,57 @@ def refine_input(status_line: str) -> Dict[str, Any]:
             'unavailable': group['rate_info'] == "rate information unavailable"}
 
 
+def prepare_output(batteries: List[Dict[str, Any]]) -> Tuple[str, int]:
+    """
+    Each Battery gets its own block, where the state (charging or discharging) and then
+    the image of the battery percentage is shown. After all the percentage of the whole System and the charge_discharge_timer
+    (to charge or discharge) is put.
+    :param batteries:  a list of battery dictionaries (as refine_input returns)
+    :return: the format string
+    """
+    charge_discharge_timer = None  # only one battery is showing these information
+    avg_percentage = 0
+    full_text = []
+    nr = 0
+    for battery in batteries:
+        nr += 1
+        avg_percentage += battery['percentage']
+        # if charge_discharge_timer not already set, set it if its there
+        if not charge_discharge_timer and battery['time']:
+            charge_discharge_timer = battery['time']
+        # set full_text
+        full_text.append(wrap_span_battery_header(nr) +
+                         STATUS_SPANS[battery['state']] +
+                         discern_loading_state(battery['percentage'])
+                         )
+    avg_percentage = avg_percentage // len(batteries)
+    full_text.append(wrap_span("%s%%" % avg_percentage, col=color(avg_percentage)))
+
+    if charge_discharge_timer:
+        full_text.append(wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M")))
+
+    return "".join(full_text), avg_percentage
+
+
 def distill_text(status: str) -> Tuple[str, int]:
     if status:
-        state_batteries = []
-        commasplitstatus_batteries = []
-        percentleft_batteries = []
-        time = ""
-        timeleft = None
         batteries = []
         for battery in status.split("\n"):
             if battery != '':
                 batteries.append(refine_input(battery))
 
-                state_batteries.append(battery.split(": ")[1].split(", ")[0])
-                commasplitstatus = battery.split(", ")
-                if not time:
-                    timeleft = ""
-                    time = commasplitstatus[-1].strip()
-                    # check if it matches a time
-                    time = re.match(r"(\d+):(\d+)", time)
-                    if time:
-                        time = ":".join(time.groups())
-                        timeleft = " ({})".format(time)
+        full_text, avg_percentage = prepare_output(batteries)
 
-                p = int(commasplitstatus[1].rstrip("%\n"))
-                if p > 0:
-                    percentleft_batteries.append(p)
-                commasplitstatus_batteries.append(commasplitstatus)
-        commasplitstatus = commasplitstatus_batteries[0]
-        if percentleft_batteries:
-            percent_left = int(sum(percentleft_batteries) / len(percentleft_batteries))
-        else:
-            percent_left = 0
-
-        # deceiver state of batteries, if one is unknown take the state of the other
-        unknowntext = FA_QUESTION_SPAN + " " + FA_BATTERY_SPAN + " "
-        fulltext = ''
-        for state in state_batteries:
-            if fulltext == unknowntext:
-                # remove the entry if it is unknown and replace it with the actual one
-                fulltext = ''
-            if state == "Discharging":
-                fulltext += FA_BATTERY_SPAN + " "
-            elif state == "Full":
-                fulltext += FA_PLUG_SPAN + " "
-                timeleft = ""
-            elif state == "Unknown" and fulltext == '':
-                fulltext += unknowntext
-                timeleft = ""
-            else:
-                fulltext += FA_LIGHTNING_SPAN + " " + FA_PLUG_SPAN + " "
-
-        form = '<span col="{}">{}%</span>'
-        fulltext += form.format(color(percent_left), percent_left)
-        fulltext += timeleft
     else:
         # stands for no battery found
-        fulltext = wrap_span(FA_NO_BATTERY, "red")
-        percent_left = 100
-    return fulltext, percent_left
+        full_text = wrap_span(FA_NO_BATTERY, "red")
+        avg_percentage = 100
+    return full_text, avg_percentage
 
 
 def output(output_text: str):
     # from blocks documentation:
-    # the 1st line updates the full_text;
+    # the 1st line updates the generate_full_text;
     # the 2nd line updates the short_text;
     # the 3rd line updates the color;
     # the 4th line updates the background.
