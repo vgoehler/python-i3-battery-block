@@ -24,7 +24,7 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='i3-battery-block',
+    name='i3-battery-block-vgg',
     version='0.1.0',
     license='BSD-2-Clause',
     description='An i3 wm block for showing the battery status. Based on battery2 from James Murphy. '
@@ -74,7 +74,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'i3-battery-block = i3_battery_block.cli:main',
+            'i3-battery-block-vgg = i3_battery_block_vgg.cli:main',
         ]
     },
 )

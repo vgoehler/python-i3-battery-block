@@ -1,10 +1,10 @@
 import pytest
 
-from i3_battery_block.font_awesome_glyphs import FA_BATTERY_LIST
-from i3_battery_block.html_formatter import color
-from i3_battery_block.html_formatter import discern_loading_state
-from i3_battery_block.html_formatter import wrap_span
-from i3_battery_block.html_formatter import wrap_span_fa
+from i3_battery_block_vgg.font_awesome_glyphs import FA_BATTERY_LIST
+from i3_battery_block_vgg.html_formatter import color
+from i3_battery_block_vgg.html_formatter import discern_loading_state
+from i3_battery_block_vgg.html_formatter import wrap_span
+from i3_battery_block_vgg.html_formatter import wrap_span_fa
 
 
 def test_wrap():

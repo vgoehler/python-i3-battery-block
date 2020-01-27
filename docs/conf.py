@@ -16,7 +16,7 @@ extensions = [
 ]
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'i3-battery-block'
+project = 'i3-battery-block-vgg'
 year = '2019-2020'
 author = 'Volker G Göhler'
 copyright = '{0}, {1}'.format(year, author)

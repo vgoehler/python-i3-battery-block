@@ -3,20 +3,20 @@ from datetime import time
 
 import pytest
 
-from i3_battery_block import battery
-from i3_battery_block.battery import discern_system_states
-from i3_battery_block.battery import distill_text
-from i3_battery_block.battery import prepare_output
-from i3_battery_block.font_awesome_glyphs import FA_BATTERY_LIST
-from i3_battery_block.font_awesome_glyphs import FA_LAPTOP
-from i3_battery_block.font_awesome_glyphs import FA_NO_BATTERY
-from i3_battery_block.font_awesome_glyphs import FA_PLUG
-from i3_battery_block.font_awesome_glyphs import FA_QUESTION
-from i3_battery_block.html_formatter import color
-from i3_battery_block.html_formatter import wrap_span
-from i3_battery_block.html_formatter import wrap_span_battery_header
-from i3_battery_block.html_formatter import wrap_span_bug
-from i3_battery_block.html_formatter import wrap_span_fa
+from i3_battery_block_vgg import battery
+from i3_battery_block_vgg.battery import discern_system_states
+from i3_battery_block_vgg.battery import distill_text
+from i3_battery_block_vgg.battery import prepare_output
+from i3_battery_block_vgg.font_awesome_glyphs import FA_BATTERY_LIST
+from i3_battery_block_vgg.font_awesome_glyphs import FA_LAPTOP
+from i3_battery_block_vgg.font_awesome_glyphs import FA_NO_BATTERY
+from i3_battery_block_vgg.font_awesome_glyphs import FA_PLUG
+from i3_battery_block_vgg.font_awesome_glyphs import FA_QUESTION
+from i3_battery_block_vgg.html_formatter import color
+from i3_battery_block_vgg.html_formatter import wrap_span
+from i3_battery_block_vgg.html_formatter import wrap_span_battery_header
+from i3_battery_block_vgg.html_formatter import wrap_span_bug
+from i3_battery_block_vgg.html_formatter import wrap_span_fa
 
 
 def test_get_power_status():

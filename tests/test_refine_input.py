@@ -1,6 +1,6 @@
 from datetime import time
 
-from i3_battery_block.battery import refine_input
+from i3_battery_block_vgg.battery import refine_input
 
 
 def test_refine_input_discharge():

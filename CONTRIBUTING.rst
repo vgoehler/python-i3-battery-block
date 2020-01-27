@@ -17,8 +17,8 @@ When `reporting a bug <https://github.com/vgoehler/python-i3-battery-block/issue
 Documentation improvements
 ==========================
 
-i3-battery-block could always use more documentation, whether as part of the
-official i3-battery-block docs, in docstrings, or even on the web in blog posts,
+i3-battery-block-vgg could always use more documentation, whether as part of the
+official i3-battery-block-vgg docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Feature requests and feedback

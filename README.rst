@@ -35,21 +35,21 @@ Overview
     :alt: Coverage Status
     :target: https://codecov.io/github/vgoehler/python-i3-battery-block
 
-.. |version| image:: https://img.shields.io/pypi/v/i3-battery-block.svg
+.. |version| image:: https://img.shields.io/pypi/v/i3-battery-block-vgg.svg
     :alt: PyPI Package latest release
-    :target: https://pypi.org/project/i3-battery-block
+    :target: https://pypi.org/project/i3-battery-block-vgg
 
-.. |wheel| image:: https://img.shields.io/pypi/wheel/i3-battery-block.svg
+.. |wheel| image:: https://img.shields.io/pypi/wheel/i3-battery-block-vgg.svg
     :alt: PyPI Wheel
-    :target: https://pypi.org/project/i3-battery-block
+    :target: https://pypi.org/project/i3-battery-block-vgg
 
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/i3-battery-block.svg
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/i3-battery-block-vgg.svg
     :alt: Supported versions
-    :target: https://pypi.org/project/i3-battery-block
+    :target: https://pypi.org/project/i3-battery-block-vgg
 
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/i3-battery-block.svg
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/i3-battery-block-vgg.svg
     :alt: Supported implementations
-    :target: https://pypi.org/project/i3-battery-block
+    :target: https://pypi.org/project/i3-battery-block-vgg
 
 .. |commits-since| image:: https://img.shields.io/github/commits-since/vgoehler/python-i3-battery-block/v0.1.0.svg
     :alt: Commits since latest release
@@ -69,7 +69,7 @@ Installation
 
 ::
 
-    pip install i3-battery-block
+    pip install i3-battery-block-vgg
 
 You can also install the in-development version with::
 

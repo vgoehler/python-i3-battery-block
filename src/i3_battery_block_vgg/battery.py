@@ -11,13 +11,13 @@ from typing import Dict
 from typing import List
 from typing import Tuple
 
-from i3_battery_block.font_awesome_glyphs import FA_NO_BATTERY
-from i3_battery_block.html_formatter import STATUS_SPANS
-from i3_battery_block.html_formatter import color
-from i3_battery_block.html_formatter import discern_loading_state
-from i3_battery_block.html_formatter import wrap_span
-from i3_battery_block.html_formatter import wrap_span_battery_header
-from i3_battery_block.html_formatter import wrap_span_bug
+from i3_battery_block_vgg.font_awesome_glyphs import FA_NO_BATTERY
+from i3_battery_block_vgg.html_formatter import STATUS_SPANS
+from i3_battery_block_vgg.html_formatter import color
+from i3_battery_block_vgg.html_formatter import discern_loading_state
+from i3_battery_block_vgg.html_formatter import wrap_span
+from i3_battery_block_vgg.html_formatter import wrap_span_battery_header
+from i3_battery_block_vgg.html_formatter import wrap_span_bug
 
 
 def get_power_status() -> str:

@@ -7,18 +7,18 @@ Why does this file exist, and why not put this in __main__?
   You might be tempted to import things from __main__ later, but that will cause
   problems: the code will get executed twice:
 
-  - When you run `python -mi3_battery_block` python will execute
+  - When you run `python -mi3_battery_block_vgg` python will execute
     ``__main__.py`` as a script. That means there won't be any
-    ``i3_battery_block.__main__`` in ``sys.modules``.
+    ``i3_battery_block_vgg.__main__`` in ``sys.modules``.
   - When you import __main__ it will get executed again (as a module) because
-    there's no ``i3_battery_block.__main__`` in ``sys.modules``.
+    there's no ``i3_battery_block_vgg.__main__`` in ``sys.modules``.
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
 import argparse
 import logging
 
-from i3_battery_block import battery
+from i3_battery_block_vgg import battery
 
 
 class CLI:
