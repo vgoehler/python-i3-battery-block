@@ -3,6 +3,7 @@ from i3_battery_block_vgg.font_awesome_glyphs import FA_BUG
 from i3_battery_block_vgg.font_awesome_glyphs import FA_LAPTOP
 from i3_battery_block_vgg.font_awesome_glyphs import FA_PLUG
 from i3_battery_block_vgg.font_awesome_glyphs import FA_QUESTION
+from i3_battery_block_vgg.state import State
 
 
 def wrap_span(text: str, col: str = None, font: str = None) -> str:
@@ -62,10 +63,10 @@ __COLOR_MAP = {
     10: "#FFFFFF",
 }
 STATUS_SPANS = {
-    "Charging": wrap_span_fa(FA_PLUG, "yellow"),
-    "Discharging": wrap_span_fa(FA_LAPTOP),
-    "Unknown": wrap_span_fa(FA_QUESTION),
-    "Full": wrap_span_fa(FA_PLUG)
+    State.CHARGING: wrap_span_fa(FA_PLUG, "yellow"),
+    State.DISCHARGING: wrap_span_fa(FA_LAPTOP),
+    State.UNKNOWN: wrap_span_fa(FA_QUESTION),
+    State.FULL: wrap_span_fa(FA_PLUG)
 }
 
 
@@ -73,7 +74,7 @@ def discern_loading_state(percentage: int, color: str = None) -> str:
     """
     returns the appropriate icon for the load
     :param color: an optional color for the span element
-    :param percentage: for the load status of the battery
+    :param percentage: for the load state of the battery
     :return: a span element
     """
     idx = len(FA_BATTERY_LIST) * percentage // 100

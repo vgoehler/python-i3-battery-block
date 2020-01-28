@@ -27,7 +27,7 @@ setup(
     name='i3-battery-block-vgg',
     version='0.1.0',
     license='BSD-2-Clause',
-    description='An i3 wm block for showing the battery status. Based on battery2 from James Murphy. '
+    description='An i3 wm block for showing the battery state. Based on battery2 from James Murphy. '
                 'https://github.com/vivien/i3blocks-contrib]',
     long_description='%s\n%s' % (
         re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst')),

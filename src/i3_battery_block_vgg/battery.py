@@ -18,9 +18,10 @@ from i3_battery_block_vgg.html_formatter import discern_loading_state
 from i3_battery_block_vgg.html_formatter import wrap_span
 from i3_battery_block_vgg.html_formatter import wrap_span_battery_header
 from i3_battery_block_vgg.html_formatter import wrap_span_bug
+from i3_battery_block_vgg.state import State
 
 
-def get_power_status() -> str:
+def get_power_state() -> str:
     return check_output(['acpi'], universal_newlines=True)
 
 
@@ -32,15 +33,15 @@ def refine_input(status_line: str) -> Dict[str, Any]:
                                  r'$)')
     group = re.match(re_battery_line, status_line).groupdict()
 
-    return {'state': group['state'], 'percentage': int(group['percentage']),
+    return {'state': State.get_state_according_to_value(group['state']), 'percentage': int(group['percentage']),
             'time': None if not group['time'] else time.fromisoformat(group['time']),
             'unavailable': group['rate_info'] == "rate information unavailable"}
 
 
-def distill_text(status: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
-    if status:
+def distill_text(state: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
+    if state:
         batteries = []
-        for battery in status.split("\n"):
+        for battery in state.split("\n"):
             if battery != '':
                 batteries.append(refine_input(battery))
 
@@ -74,8 +75,8 @@ def output(full_text: str, small_text: str):
 
 
 def main(compact: bool = False, show_bug: bool = False):
-    status = get_power_status()
-    full_text, small_text, percent_left = distill_text(status, compact=compact, show_bug=show_bug)
+    state = get_power_state()
+    full_text, small_text, percent_left = distill_text(state, compact=compact, show_bug=show_bug)
 
     output(full_text, small_text)
 
@@ -97,7 +98,7 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     bug_occurred = False
     for battery in batteries:
         # battery bug gate
-        if battery['unavailable'] and battery['state'] == 'Unknown':
+        if battery['unavailable'] and battery['state'] == State.UNKNOWN:
             bug_occurred = True
             if show_bug:
                 # bug icon in orange as first entry
@@ -133,17 +134,17 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     return avg_percentage
 
 
-def discern_system_states(states: List[str]) -> str:
+def discern_system_states(states: List[State]) -> State:
     # in case only one entry, or only the same entries, reduce and return
     state_set = set(states)
     if len(state_set) == 1:
         return state_set.pop()
     # if charging or discharging is in list then return this
-    for state in ['Charging', 'Discharging']:
+    for state in [State.CHARGING, State.DISCHARGING]:
         if state_set.issuperset([state]):
             return state
-    if state_set.issuperset(['Full']):
-        return 'Full'
+    if state_set.issuperset([State.FULL]):
+        return State.FULL
     raise NotImplementedError("This should not happen. All States are set.")
 
 
