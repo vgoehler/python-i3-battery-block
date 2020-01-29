@@ -16,12 +16,12 @@ def test_wrap_fa():
 
 
 def test_wrap_with_color():
-    assert wrap_span("a", "b") == "<span col='b'>a</span>", "String should be wrapped into span element!"
+    assert wrap_span("a", "b") == "<span color='b'>a</span>", "String should be wrapped into span element!"
 
 
 def test_wrap_fa_with_color():
     assert wrap_span_fa("a",
-                        "b") == "<span font='FontAwesome' col='b'>a</span>", "String should be wrapped into span " \
+                        "b") == "<span font='FontAwesome' color='b'>a</span>", "String should be wrapped into span " \
                                                                              "element! "
 
 

@@ -14,7 +14,7 @@ def wrap_span(text: str, col: str = None, font: str = None) -> str:
     :type text: string, the text that should be wrapped in the span
     :type col: string, a html color string
     """
-    color_text = " col='%s'" % col if col else ""
+    color_text = " color='%s'" % col if col else ""
     font_text = " font='%s'" % font if font else ""
     return "<span%s%s>%s</span>" % (font_text, color_text, text)
 
