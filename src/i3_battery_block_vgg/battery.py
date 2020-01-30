@@ -1,10 +1,4 @@
-# Copyright (C) 2016 James Murphy
-# Licensed under the GPL version 2 only
-#
-# A battery indicator blocklet script for i3blocks
-
 import re
-from datetime import time
 from subprocess import check_output
 from typing import Any
 from typing import Dict
@@ -19,6 +13,7 @@ from i3_battery_block_vgg.html_formatter import wrap_span
 from i3_battery_block_vgg.html_formatter import wrap_span_battery_header
 from i3_battery_block_vgg.html_formatter import wrap_span_bug
 from i3_battery_block_vgg.state import State
+from i3_battery_block_vgg.timeparser import parse_time
 
 
 def get_power_state() -> str:
@@ -34,7 +29,7 @@ def refine_input(status_line: str) -> Dict[str, Any]:
     group = re.match(re_battery_line, status_line).groupdict()
 
     return {'state': State.get_state_according_to_value(group['state']), 'percentage': int(group['percentage']),
-            'time': None if not group['time'] else time.fromisoformat(group['time']),
+            'time': None if not group['time'] else parse_time(group['time']),
             'unavailable': group['rate_info'] == "rate information unavailable"}
 
 

@@ -1,5 +1,4 @@
 import subprocess
-from datetime import time
 
 import pytest
 
@@ -18,6 +17,7 @@ from i3_battery_block_vgg.html_formatter import wrap_span_battery_header
 from i3_battery_block_vgg.html_formatter import wrap_span_bug
 from i3_battery_block_vgg.html_formatter import wrap_span_fa
 from i3_battery_block_vgg.state import State
+from i3_battery_block_vgg.timeparser import parse_time
 
 
 def test_get_power_status():
@@ -41,7 +41,7 @@ def test_distill_text_empty():
 def test_prepare_output_charging():
     # first battery charging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.CHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
+        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
     ]
     expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + ' ' + wrap_span_fa(FA_BATTERY_LIST[3])
@@ -57,7 +57,7 @@ def test_prepare_output_charging():
 
 def test_prepare_output_charging_small():
     sut = [
-        {"state": State.CHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
+        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
     ]
     expected = [wrap_span_fa(FA_PLUG, "yellow"),
@@ -72,7 +72,7 @@ def test_prepare_output_charging_small():
 def test_prepare_output_charging_small_any_order():
     sut = [
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
-        {"state": State.CHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
+        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
     ]
     expected = [wrap_span_fa(FA_PLUG, "yellow"),
                 wrap_span_fa(FA_BATTERY_LIST[1], col=color(35)),
@@ -127,7 +127,7 @@ def test_prepare_output_full_small_any_order():
 def test_prepare_output_discharging():
     # first battery discharging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.DISCHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
+        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
     ]
     expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + ' ' + wrap_span_fa(FA_BATTERY_LIST[3]) + ' ',
@@ -142,7 +142,7 @@ def test_prepare_output_discharging():
 
 def test_prepare_output_discharging_small():
     sut = [
-        {"state": State.DISCHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
+        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
         {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
     ]
@@ -159,7 +159,7 @@ def test_prepare_output_discharging_small_other_order():
     sut = [
         {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
-        {"state": State.DISCHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
+        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
                 wrap_span_fa(FA_BATTERY_LIST[2], col=color(57)),

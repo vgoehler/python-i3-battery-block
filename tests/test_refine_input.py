@@ -1,18 +1,17 @@
-from datetime import time
-
 from i3_battery_block_vgg.battery import refine_input
 from i3_battery_block_vgg.state import State
+from i3_battery_block_vgg.timeparser import parse_time
 
 
 def test_refine_input_discharge():
     status_line = 'Battery 1: Discharging, 88%, 00:50:14 remaining'
-    expected = {'state': State.DISCHARGING, 'percentage': 88, 'time': time.fromisoformat('00:50:14'), 'unavailable': False}
+    expected = {'state': State.DISCHARGING, 'percentage': 88, 'time': parse_time('00:50:14'), 'unavailable': False}
     assert refine_input(status_line) == expected, "re matching is broken"
 
 
 def test_refine_input_charge():
     status_line = 'Battery 2: Charging, 88%, 00:09:24 until charged'
-    expected = {'state': State.CHARGING, 'percentage': 88, 'time': time.fromisoformat('00:09:24'), 'unavailable': False}
+    expected = {'state': State.CHARGING, 'percentage': 88, 'time': parse_time('00:09:24'), 'unavailable': False}
     assert refine_input(status_line) == expected, "re matching is broken"
 
 
