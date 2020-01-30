@@ -59,8 +59,7 @@ Overview
 
 .. end-badges
 
-An i3 wm block for showing the battery status. Based on battery2 from James Murphy. https://github.com/vivien/i3blocks-
-contrib]
+An i3 wm status block for showing the battery status in i3 blocks. It's output uses pango to format the text. Loosely based on battery2 from James Murphy. https://github.com/vivien/i3blocks-contrib]
 
 * Free software: BSD 2-Clause License
 
@@ -76,6 +75,25 @@ You can also install the in-development version with::
     pip install https://github.com/vgoehler/python-i3-battery-block/archive/master.zip
 
 
+Command Line Options
+====================
+
+.. code:: bash
+
+   usage: i3-battery-block-vgg [-h] [-c] [-b]
+                               [-l {debug,info,warning,error,critical}]
+
+   CLI for i3 wm block battery
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -c, --compact         flag for compact mode, truncates all batteries into
+                           one
+     -b, --show_bug        This will show a marker if the acpi bug has occurred.
+     -l {debug,info,warning,error,critical}, --loglevel {debug,info,warning,error,critical}
+                           log level
+
+
 Documentation
 =============
 
@@ -86,7 +104,7 @@ https://python-i3-battery-block.readthedocs.io/
 Development
 ===========
 
-To run the all tests run::
+To run all tests run::
 
     tox
 
