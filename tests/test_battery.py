@@ -44,8 +44,9 @@ def test_prepare_output_charging():
         {"state": State.CHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
     ]
-    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + wrap_span_fa(FA_BATTERY_LIST[3]),
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]),
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + ' ' + wrap_span_fa(FA_BATTERY_LIST[3])
+                + ' ',
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[0]) + ' ',
                 wrap_span("35%", color(35)),
                 wrap_span("(01:33)")
                 ]
@@ -88,8 +89,8 @@ def test_prepare_output_full():
         {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 100, 'time': None, 'unavailable': False},
     ]
-    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]),
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]),
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
                 wrap_span("100%", color(100)),
                 ]
     input_list = []
@@ -98,7 +99,6 @@ def test_prepare_output_full():
 
 
 def test_prepare_output_full_small():
-    # first battery Full and second battery unknown with 100%
     sut = [
         {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 100, 'time': None, 'unavailable': False},
@@ -130,8 +130,8 @@ def test_prepare_output_discharging():
         {"state": State.DISCHARGING, 'percentage': 70, 'time': time.fromisoformat("01:33:02"), 'unavailable': False},
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
     ]
-    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + wrap_span_fa(FA_BATTERY_LIST[3]),
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[0]),
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + ' ' + wrap_span_fa(FA_BATTERY_LIST[3]) + ' ',
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[0]) + ' ',
                 wrap_span("35%", color(35)),
                 wrap_span("(01:33)"),
                 ]
@@ -177,8 +177,8 @@ def test_for_remove_of_battery_bug():
         {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': True},
         {"state": State.UNKNOWN, 'percentage': 88, 'time': None, 'unavailable': False},
     ]
-    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]),
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]),
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
                 wrap_span("94%", color(94)),
                 ]
     input_list = []
@@ -194,8 +194,8 @@ def test_for_remove_of_battery_bug_with_indicator():
         {"state": State.UNKNOWN, 'percentage': 88, 'time': None, 'unavailable': False},
     ]
     expected = [wrap_span_bug(),
-                wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + wrap_span_fa(FA_BATTERY_LIST[4]),
-                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + wrap_span_fa(FA_BATTERY_LIST[4]),
+                wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
+                wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
                 wrap_span("94%", color(94)),
                 ]
     input_list = []
@@ -213,7 +213,7 @@ def test_average_with_bug():
 
 def test_active_compact_mode():
     # this should output text for no battery found
-    text = "Battery 0: Discharging, 77%, 01:40:21 remaining\n"\
+    text = "Battery 0: Discharging, 77%, 01:40:21 remaining\n" \
            "Battery 1: Unknown, 5%"
     full, small, avg = distill_text(text, compact=True)
     assert full == small, "in compact mode the full output should be as big as the small output"

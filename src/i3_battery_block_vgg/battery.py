@@ -114,8 +114,8 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
             charge_discharge_timer = battery['time']
         # set full_text
         full_text.append(wrap_span_battery_header(nr) +
-                         STATUS_SPANS[battery['state']] +
-                         discern_loading_state(battery['percentage'])
+                         STATUS_SPANS[battery['state']] + ' ' +
+                         discern_loading_state(battery['percentage']) + ' '
                          )
 
     system_state = discern_system_states([b['state'] for b in batteries])
