@@ -1,3 +1,5 @@
+from functools import partial
+
 from i3_battery_block_vgg.font_awesome_glyphs import FA_BATTERY_LIST
 from i3_battery_block_vgg.font_awesome_glyphs import FA_BUG
 from i3_battery_block_vgg.font_awesome_glyphs import FA_LAPTOP
@@ -6,25 +8,28 @@ from i3_battery_block_vgg.font_awesome_glyphs import FA_QUESTION
 from i3_battery_block_vgg.state import State
 
 
-def wrap_span(text: str, col: str = None, font: str = None) -> str:
+def wrap_span(text: str, col: str = None, font: str = None, weight: str = None) -> str:
     """
     This wraps a span element around an input text.
 
+    :param weight: string, the weight of the element, numerical or  'ultralight', 'light', 'normal', 'bold',
+        'ultrabold', 'heavy'
     :param font: string, the font to use for the span element
     :type text: string, the text that should be wrapped in the span
     :type col: string, a html color string
     """
     color_text = " color='%s'" % col if col else ""
     font_text = " font='%s'" % font if font else ""
-    return "<span%s%s>%s</span>" % (font_text, color_text, text)
+    weight_text = " weight='%s'" % weight if weight else ""
+    return "<span%s%s%s>%s</span>" % (font_text, color_text, weight_text, text)
 
 
-def wrap_span_fa(text: str, col: str = None, font: str = 'FontAwesome') -> str:
-    return wrap_span(text, col=col, font=font)
+wrap_span_fa = partial(wrap_span, font='FontAwesome')
+wrap_span_fa.__doc__ = """This behaves like wrap_span but has the font locked to FontAwesome"""
 
 
 def wrap_span_battery_header(id_nr: int) -> str:
-    return wrap_span(str(id_nr), col="#BFBFBF")
+    return wrap_span(str(id_nr), col="#BFBFBF", weight='bold')
 
 
 def wrap_span_bug():

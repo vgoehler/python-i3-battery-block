@@ -7,22 +7,23 @@ from i3_battery_block_vgg.html_formatter import wrap_span
 from i3_battery_block_vgg.html_formatter import wrap_span_fa
 
 
-def test_wrap():
-    assert wrap_span("a") == "<span>a</span>", "String should be wrapped into span element!"
+@pytest.mark.parametrize(
+    "text, font, col, weight, expected",
+    [
+        ("a", None, None, None, "<span>a</span>"),
+        ("a", None, "b", None, "<span color='b'>a</span>"),
+        ("a", None, None, "c", "<span weight='c'>a</span>"),
+        ("a", None, "b", "c", "<span color='b' weight='c'>a</span>"),
+        ("a", "ft", "b", "c", "<span font='ft' color='b' weight='c'>a</span>"),
+    ]
+)
+def test_wrap(text, font, col, weight, expected):
+    assert wrap_span(text=text, font=font, col=col, weight=weight) == expected, \
+        "String should be wrapped into span element!"
 
 
 def test_wrap_fa():
     assert wrap_span_fa("a") == "<span font='FontAwesome'>a</span>", "String should be wrapped into span element!"
-
-
-def test_wrap_with_color():
-    assert wrap_span("a", "b") == "<span color='b'>a</span>", "String should be wrapped into span element!"
-
-
-def test_wrap_fa_with_color():
-    assert wrap_span_fa("a",
-                        "b") == "<span font='FontAwesome' color='b'>a</span>", "String should be wrapped into span " \
-                                                                             "element! "
 
 
 @pytest.mark.parametrize(
