@@ -51,9 +51,9 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/i3-battery-block-vgg
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/vgoehler/python-i3-battery-block/v0.2.1.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/vgoehler/python-i3-battery-block/v0.2.2.svg
     :alt: Commits since latest release
-    :target: https://github.com/vgoehler/python-i3-battery-block/compare/v0.2.1...master
+    :target: https://github.com/vgoehler/python-i3-battery-block/compare/v0.2.2...master
 
 
 
