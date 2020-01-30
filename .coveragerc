@@ -6,7 +6,7 @@ source =
 [run]
 branch = true
 source =
-    i3_battery_block
+    i3_battery_block_vgg
     tests
 parallel = true
 
