@@ -17,6 +17,8 @@ Why does this file exist, and why not put this in __main__?
 """
 import argparse
 import logging
+import os.path
+import sys
 
 from i3_battery_block_vgg import __version__
 from i3_battery_block_vgg import battery
@@ -29,7 +31,9 @@ class CLI:
         self.args = None
 
         self.parser = argparse.ArgumentParser(description='CLI for i3 wm block battery',
-                                              epilog='volker.goehler@informatik.tu-freiberg.de'
+                                              epilog='volker.goehler@informatik.tu-freiberg.de',
+                                              prog=os.path.split(sys.argv[0])[-1] if '__main__' not in sys.argv[0] else
+                                              'i3_battery_block_vgg '
                                               )
         self.parser.add_argument('-c', '--compact', action='store_true',
                                  help="flag for compact mode, truncates all batteries into one")
