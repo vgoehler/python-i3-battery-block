@@ -2,6 +2,7 @@ import logging
 
 import pytest
 
+from i3_battery_block_vgg import __version__
 from i3_battery_block_vgg import cli
 
 
@@ -39,3 +40,12 @@ def test_log_level_wrong():
     sut = cli.CLI()
     with pytest.raises(SystemExit):
         sut.parse(args=['--loglevel=fubar'])
+
+
+def test_version_output(capsys):
+    sut = cli.CLI()
+    with pytest.raises(SystemExit) as e:
+        sut.parse(args=['--version'])
+    assert "0" in str(e.value)  # error code is zero
+    output = capsys.readouterr()
+    assert str.find(output.out, __version__) != -1

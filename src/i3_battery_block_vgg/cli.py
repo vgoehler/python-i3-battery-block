@@ -18,6 +18,7 @@ Why does this file exist, and why not put this in __main__?
 import argparse
 import logging
 
+from i3_battery_block_vgg import __version__
 from i3_battery_block_vgg import battery
 
 
@@ -38,6 +39,7 @@ class CLI:
                                  choices=["debug", "info", "warning", "error", "critical"],
                                  type=str,
                                  default="warning")
+        self.parser.add_argument('--version', action='version', version='%s %s' % ('%(prog)s', __version__))
 
     def parse(self, args: list):
         self.args = self.parser.parse_args(args=args)
