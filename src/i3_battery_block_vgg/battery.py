@@ -52,12 +52,9 @@ def refine_input(status_line: str) -> Dict[str, Any]:
     return batteries
 
 
-def distill_text(state: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
-    if state:
-        batteries = []
-        for battery in state.split("\n"):
-            if battery != '':
-                batteries.append(refine_input(battery))
+def distill_text(battery_text: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
+    if battery_text:
+        batteries = consolidate_batteries(battery_text)
 
         full_text = []
         small_text = []
@@ -76,6 +73,17 @@ def distill_text(state: str, compact: bool = False, show_bug: bool = False) -> T
         return small_text, small_text, avg_percentage
     else:
         return full_text, small_text, avg_percentage
+
+
+def consolidate_batteries(battery_text: str) -> List[Dict]:
+    batteries = []
+    for battery in battery_text.split("\n"):
+        try:
+            batteries.append(refine_input(battery))
+        except AttributeError:
+            # refine_input encountered an error, ignore this line
+            continue
+    return batteries
 
 
 def output(full_text: str, small_text: str):

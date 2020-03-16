@@ -1,3 +1,5 @@
+import pytest
+
 from i3_battery_block_vgg.battery import refine_input
 from i3_battery_block_vgg.state import State
 from i3_battery_block_vgg.timeparser import parse_time
@@ -57,3 +59,10 @@ def test_capacity_line():
     expected = {'id': 0, 'state': None, 'percentage': None, 'time': None,
                 'unavailable': False, 'design_capacity': 1874, 'full_capacity': 1814}
     assert refine_input(status_line) == expected, "re matching of capacity line is broken"
+
+
+def test_wrong_input():
+    status_line = "fubar input"
+    with pytest.raises(AttributeError) as e:
+        refine_input(status_line)
+    assert "'NoneType' object has no attribute 'groupdict'" in str(e.value)
