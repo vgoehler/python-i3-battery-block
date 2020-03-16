@@ -1,0 +1,5 @@
+Battery 0: Charging, 76%, 00:18:24 until charged
+Battery 0: design capacity 1873 mAh, last full capacity 1708 mAh = 91%
+Battery 1: Unknown, 0%, rate information unavailable
+Battery 2: Unknown, 4%
+Battery 2: design capacity 2160 mAh, last full capacity 1756 mAh = 81%

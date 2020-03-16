@@ -1,0 +1,5 @@
+Battery 0: Discharging, 94%, 03:03:39 remaining
+Battery 0: design capacity 1988 mAh, last full capacity 1813 mAh = 91%
+Battery 1: Unknown, 0%, rate information unavailable
+Battery 2: Unknown, 5%
+Battery 2: design capacity 2173 mAh, last full capacity 1768 mAh = 81%

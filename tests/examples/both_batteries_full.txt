@@ -1,0 +1,4 @@
+Battery 0: Full, 100%
+Battery 0: design capacity 1874 mAh, last full capacity 1814 mAh = 96%
+Battery 1: Full, 100%
+Battery 1: design capacity 1870 mAh, last full capacity 1544 mAh = 82%
