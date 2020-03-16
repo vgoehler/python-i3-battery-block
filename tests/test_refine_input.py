@@ -1,10 +1,6 @@
-import os
-
 from i3_battery_block_vgg.battery import refine_input
 from i3_battery_block_vgg.state import State
 from i3_battery_block_vgg.timeparser import parse_time
-
-example_dir = os.path.join(os.getcwd(), 'tests', 'examples')
 
 
 def test_refine_input_discharge():
