@@ -33,13 +33,23 @@ def refine_input(status_line: str) -> Dict[str, Any]:
 
     group = re.match(re_battery_line, status_line).groupdict()
 
-    return {'id': int(group['id']),
-            'state': None if not group['state'] else State.get_state_according_to_value(group['state']),
-            'percentage': None if not group['percentage'] else int(group['percentage']),
-            'time': None if not group['time'] else parse_time(group['time']),
-            'unavailable': group['unavailable'] == "rate information unavailable",
-            'design_capacity': None if not group['design_capacity'] else int(group['design_capacity']),
-            'full_capacity': None if not group['full_capacity'] else int(group['full_capacity'])}
+    def none_or_convert_to_int(x):
+        return None if not x else int(x)
+
+    functions = {'id': int,
+                 'state': lambda x: None if not x else State.get_state_according_to_value(x),
+                 'percentage': none_or_convert_to_int,
+                 'time': lambda x: None if not x else parse_time(x),
+                 'unavailable': lambda x: x == "rate information unavailable",
+                 'design_capacity': none_or_convert_to_int,
+                 'full_capacity': none_or_convert_to_int}
+
+    batteries = {}
+
+    for key, value in group.items():
+        batteries[key] = functions[key](value)
+
+    return batteries
 
 
 def distill_text(state: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
