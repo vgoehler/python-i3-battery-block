@@ -32,8 +32,10 @@ def test_get_power_status():
 def test_prepare_output_charging():
     # first battery charging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
+        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG, "yellow") + ' ' + wrap_span_fa(FA_BATTERY_LIST[3])
                 + ' ',
@@ -48,8 +50,10 @@ def test_prepare_output_charging():
 
 def test_prepare_output_charging_small():
     sut = [
-        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
+        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_PLUG, "yellow"),
                 wrap_span_fa(FA_BATTERY_LIST[1], col=color(35)),
@@ -62,8 +66,10 @@ def test_prepare_output_charging_small():
 
 def test_prepare_output_charging_small_any_order():
     sut = [
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
-        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.CHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_PLUG, "yellow"),
                 wrap_span_fa(FA_BATTERY_LIST[1], col=color(35)),
@@ -77,8 +83,10 @@ def test_prepare_output_charging_small_any_order():
 def test_prepare_output_full():
     # first battery Full and second battery unknown with 100%
     sut = [
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 100, 'time': None, 'unavailable': False},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
                 wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
@@ -91,8 +99,10 @@ def test_prepare_output_full():
 
 def test_prepare_output_full_small():
     sut = [
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 100, 'time': None, 'unavailable': False},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_PLUG),
                 wrap_span_fa(FA_BATTERY_LIST[4], col=color(100)),
@@ -104,8 +114,10 @@ def test_prepare_output_full_small():
 
 def test_prepare_output_full_small_any_order():
     sut = [
-        {"state": State.UNKNOWN, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
+        {"state": State.UNKNOWN, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_PLUG),
                 wrap_span_fa(FA_BATTERY_LIST[4], col=color(100)),
@@ -118,8 +130,10 @@ def test_prepare_output_full_small_any_order():
 def test_prepare_output_discharging():
     # first battery discharging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
+        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_LAPTOP) + ' ' + wrap_span_fa(FA_BATTERY_LIST[3]) + ' ',
                 wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[0]) + ' ',
@@ -133,9 +147,12 @@ def test_prepare_output_discharging():
 
 def test_prepare_output_discharging_small():
     sut = [
-        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
+        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': None, 'full_capacity': None},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
                 wrap_span_fa(FA_BATTERY_LIST[2], col=color(57)),
@@ -148,9 +165,12 @@ def test_prepare_output_discharging_small():
 
 def test_prepare_output_discharging_small_other_order():
     sut = [
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': False},
-        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"), 'unavailable': False},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': None, 'full_capacity': None},
+        {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
                 wrap_span_fa(FA_BATTERY_LIST[2], col=color(57)),
@@ -164,9 +184,12 @@ def test_prepare_output_discharging_small_other_order():
 def test_for_remove_of_battery_bug():
     # first battery discharging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': True},
-        {"state": State.UNKNOWN, 'percentage': 88, 'time': None, 'unavailable': False},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': True, 'design_capacity': None, 'full_capacity': None},
+        {"state": State.UNKNOWN, 'percentage': 88, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
                 wrap_span_battery_header(2) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
@@ -177,12 +200,36 @@ def test_for_remove_of_battery_bug():
     assert input_list == expected, "output is not according to specifications"
 
 
+def test_for_remove_of_battery_bug_second_variant():
+    # first battery discharging with 70% and second battery unknown with 0%
+    sut = [
+        {"state": State.UNKNOWN, 'percentage': 89, 'time': None,
+         'unavailable': False, 'design_capacity': 1960, 'full_capacity': 1898},
+        {"state": State.DISCHARGING, 'percentage': 0, 'time': None,
+         'unavailable': True, 'design_capacity': None, 'full_capacity': None},
+        {"state": State.CHARGING, 'percentage': 6, 'time': parse_time('00:54:00'),
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+    ]
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
+                wrap_span_battery_header(2) + wrap_span_fa(FA_PLUG, col='yellow') + ' ' +
+                wrap_span_fa(FA_BATTERY_LIST[0]) + ' ',
+                wrap_span("47%", color(47)),
+                wrap_span("(01:33)")
+                ]
+    input_list = []
+    prepare_output(sut, input_list, [])
+    assert input_list == expected, "output is not according to specifications"
+
+
 def test_for_remove_of_battery_bug_with_indicator():
     # first battery discharging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.FULL, 'percentage': 100, 'time': None, 'unavailable': False},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None, 'unavailable': True},
-        {"state": State.UNKNOWN, 'percentage': 88, 'time': None, 'unavailable': False},
+        {"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': True, 'design_capacity': None, 'full_capacity': None},
+        {"state": State.UNKNOWN, 'percentage': 88, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_bug(),
                 wrap_span_battery_header(1) + wrap_span_fa(FA_PLUG) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',

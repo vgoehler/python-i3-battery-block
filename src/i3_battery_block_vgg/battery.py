@@ -83,6 +83,7 @@ def consolidate_batteries(battery_text: str) -> List[Dict]:
         except AttributeError:
             # refine_input encountered an error, ignore this line
             continue
+
         has_merged = False
         for battery_data_structure in batteries:
             if battery_data_structure['id'] == parsed_data_structure['id']:
@@ -130,7 +131,7 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     bug_occurred = False
     for battery in batteries:
         # battery bug gate
-        if battery['unavailable'] and battery['state'] == State.UNKNOWN:
+        if battery['unavailable'] and battery['state'] in [State.UNKNOWN, State.DISCHARGING]:
             bug_occurred = True
             if show_bug:
                 # bug icon in orange as first entry
