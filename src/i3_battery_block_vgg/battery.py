@@ -77,12 +77,22 @@ def distill_text(battery_text: str, compact: bool = False, show_bug: bool = Fals
 
 def consolidate_batteries(battery_text: str) -> List[Dict]:
     batteries = []
-    for battery in battery_text.split("\n"):
+    for battery_text in battery_text.split("\n"):
         try:
-            batteries.append(refine_input(battery))
+            parsed_data_structure = refine_input(battery_text)
         except AttributeError:
             # refine_input encountered an error, ignore this line
             continue
+        has_merged = False
+        for battery_data_structure in batteries:
+            if battery_data_structure['id'] == parsed_data_structure['id']:
+                # merge
+                for key in ['design_capacity', 'full_capacity']:
+                    battery_data_structure[key] = parsed_data_structure[key]
+                has_merged = True
+        if not has_merged:
+            batteries.append(parsed_data_structure)
+
     return batteries
 
 
