@@ -21,16 +21,25 @@ def get_power_state() -> str:
 
 
 def refine_input(status_line: str) -> Dict[str, Any]:
-    re_battery_line = re.compile(r'^Battery [0-9]+: (?P<state>[a-zA-Z]+), (?P<percentage>[0-9]{1,3})%'
+    re_battery_line = re.compile(r'^Battery (?P<id>[0-9]+): '
+                                 r'((?P<state>[a-zA-Z]+), (?P<percentage>[0-9]{1,3})%'
                                  r'(, (?P<time>[0-9:]+)[a-zA-Z ]*$|'
-                                 r', (?P<rate_info>rate information unavailable)$|'
+                                 r', (?P<unavailable>rate information unavailable)$|'
                                  r', [a-zA-Z \-.]+$|'
-                                 r'$)')
+                                 r'$)|'  # end of group state information line 1
+                                 r'design capacity (?P<design_capacity>[0-9]+) mAh, '
+                                 r'last full capacity (?P<full_capacity>[0-9]+) mAh = [0-9]{1,3}%$'
+                                 ')')  # end of group capacity information line 2
+
     group = re.match(re_battery_line, status_line).groupdict()
 
-    return {'state': State.get_state_according_to_value(group['state']), 'percentage': int(group['percentage']),
+    return {'id': int(group['id']),
+            'state': None if not group['state'] else State.get_state_according_to_value(group['state']),
+            'percentage': None if not group['percentage'] else int(group['percentage']),
             'time': None if not group['time'] else parse_time(group['time']),
-            'unavailable': group['rate_info'] == "rate information unavailable"}
+            'unavailable': group['unavailable'] == "rate information unavailable",
+            'design_capacity': None if not group['design_capacity'] else int(group['design_capacity']),
+            'full_capacity': None if not group['full_capacity'] else int(group['full_capacity'])}
 
 
 def distill_text(state: str, compact: bool = False, show_bug: bool = False) -> Tuple[str, str, int]:
