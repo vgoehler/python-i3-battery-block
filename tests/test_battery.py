@@ -22,7 +22,7 @@ def test_get_power_status():
     # this should retrieve acpi output
     try:
         sut = battery.get_power_state()
-        expected = subprocess.run("acpi", capture_output=True, universal_newlines=True)
+        expected = subprocess.run("acpi -i", capture_output=True, universal_newlines=True)
         assert sut == expected.stdout, "both outputs should be from acpi and equal"
     except FileNotFoundError as e:
         # if no acpi is there (ci server) test for correct error message

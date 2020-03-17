@@ -17,7 +17,7 @@ from i3_battery_block_vgg.timeparser import parse_time
 
 
 def get_power_state() -> str:
-    return check_output(['acpi'], universal_newlines=True)
+    return check_output(['acpi', '-i'], universal_newlines=True)
 
 
 def refine_input(status_line: str) -> Dict[str, Any]:
