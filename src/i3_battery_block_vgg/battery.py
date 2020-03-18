@@ -131,7 +131,7 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     bug_occurred = False
     for battery in batteries:
         # battery bug gate
-        if battery['unavailable'] and battery['state'] in [State.UNKNOWN, State.DISCHARGING]:
+        if is_buggy(battery):
             bug_occurred = True
             if show_bug:
                 # bug icon in orange as first entry
@@ -165,6 +165,16 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
         small_text.append(time_span)
 
     return avg_percentage
+
+
+def is_buggy(battery: Dict) -> bool:
+    """
+    This method returns true in case an acpi bug has occurred.
+    In this case the battery is flagged unavailable and has no capacity information.
+    :param battery: the battery dictionary
+    :return: bool
+    """
+    return battery['design_capacity'] is None
 
 
 def discern_system_states(states: List[State]) -> State:

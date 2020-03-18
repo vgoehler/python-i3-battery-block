@@ -150,12 +150,12 @@ def test_prepare_output_discharging_small():
         {"state": State.DISCHARGING, 'percentage': 70, 'time': parse_time("01:33:02"),
          'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
         {"state": State.FULL, 'percentage': 100, 'time': None,
-         'unavailable': False, 'design_capacity': None, 'full_capacity': None},
-        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
          'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
+        {"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': False, 'design_capacity': None, 'full_capacity': None},
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
-                wrap_span_fa(FA_BATTERY_LIST[2], col=color(57)),
+                wrap_span_fa(FA_BATTERY_LIST[4], col=color(85)),
                 wrap_span("(01:33)"),
                 ]
     input_list = []
@@ -173,7 +173,7 @@ def test_prepare_output_discharging_small_other_order():
          'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
-                wrap_span_fa(FA_BATTERY_LIST[2], col=color(57)),
+                wrap_span_fa(FA_BATTERY_LIST[4], col=color(85)),
                 wrap_span("(01:33)"),
                 ]
     input_list = []
