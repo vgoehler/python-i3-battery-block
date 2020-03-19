@@ -5,6 +5,7 @@ from typing import Dict
 from typing import List
 from typing import Tuple
 
+from i3_battery_block_vgg.battery_timer import battery_timer
 from i3_battery_block_vgg.font_awesome_glyphs import FA_NO_BATTERY
 from i3_battery_block_vgg.html_formatter import STATUS_SPANS
 from i3_battery_block_vgg.html_formatter import color
@@ -125,7 +126,7 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     discharge) is put. :param compact: :param show_bug: :param batteries:  a list of battery dictionaries (as
     refine_input returns) :return: the format string
     """
-    charge_discharge_timer = None  # only one battery is showing these information
+    timer = battery_timer()  # only one battery is showing these information
     avg_percentage = 0
     nr = 0
     bug_occurred = False
@@ -142,9 +143,9 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
 
         nr += 1
         avg_percentage += battery['percentage']
-        # if charge_discharge_timer not already set, set it if its there
-        if not charge_discharge_timer and battery['time']:
-            charge_discharge_timer = battery['time']
+        # pass battery dict to timer object
+        timer.set_timer(battery)
+
         # set full_text
         full_text.append(wrap_span_battery_header(nr) +
                          STATUS_SPANS[battery['state']] + ' ' +
@@ -159,10 +160,8 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     full_text.append(wrap_span("%s%%" % avg_percentage, col=col))
     small_text.append(discern_loading_state(avg_percentage, color=col))
 
-    if charge_discharge_timer:
-        time_span = wrap_span("(%s)" % charge_discharge_timer.strftime("%H:%M"))
-        full_text.append(time_span)
-        small_text.append(time_span)
+    # sets the timer if variable is set
+    timer.output_timer(full_text=full_text, small_text=small_text)
 
     return avg_percentage
 
