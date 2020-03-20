@@ -127,13 +127,10 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     refine_input returns) :return: the format string
     """
     timer = battery_timer()  # only one battery is showing these information
-    avg_percentage = 0
     nr = 0
-    bug_occurred = False
     for battery in batteries:
         # battery bug gate
         if is_buggy(battery):
-            bug_occurred = True
             if show_bug:
                 # bug icon in orange as first entry
                 span_bug = wrap_span_bug()
@@ -142,7 +139,6 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
             continue
 
         nr += 1
-        avg_percentage += battery['percentage']
         # pass battery dict to timer object
         timer.set_timer(battery)
 
@@ -155,7 +151,7 @@ def prepare_output(batteries: List[Dict[str, Any]], full_text: List[str], small_
     system_state = discern_system_states([b['state'] for b in batteries])
     small_text.append(STATUS_SPANS[system_state])
 
-    avg_percentage = __calculate_avg_percentage(avg_percentage, len(batteries), bug_occurred)
+    avg_percentage = timer.calculate_avg_percentage()
     col = color(avg_percentage)
     full_text.append(wrap_span("%s%%" % avg_percentage, col=col))
     small_text.append(discern_loading_state(avg_percentage, color=col))
@@ -188,7 +184,3 @@ def discern_system_states(states: List[State]) -> State:
     if state_set.issuperset([State.FULL]):
         return State.FULL
     raise NotImplementedError("This should not happen. All States are set.")
-
-
-def __calculate_avg_percentage(percentage_sum: int, battery_count: int, bug_occurred: bool) -> int:
-    return percentage_sum // (battery_count - 1 if bug_occurred else battery_count)

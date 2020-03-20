@@ -8,7 +8,7 @@ def parse_time(time_input: str) -> time:
     if sys.version_info < (3, 7):
         return __parse_time_manually(time_input)
     else:
-        return time.fromisoformat("01:33:02")
+        return time.fromisoformat(time_input)
 
 
 def __parse_time_manually(time_input: str) -> time:

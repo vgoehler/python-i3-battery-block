@@ -1,9 +1,11 @@
 import subprocess
+from typing import Dict
 
 import pytest
 
 from i3_battery_block_vgg import battery
 from i3_battery_block_vgg.battery import discern_system_states
+from i3_battery_block_vgg.battery import is_buggy
 from i3_battery_block_vgg.battery import prepare_output
 from i3_battery_block_vgg.font_awesome_glyphs import FA_BATTERY_LIST
 from i3_battery_block_vgg.font_awesome_glyphs import FA_LAPTOP
@@ -156,7 +158,7 @@ def test_prepare_output_discharging_small():
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
                 wrap_span_fa(FA_BATTERY_LIST[4], col=color(85)),
-                wrap_span("(01:33)"),
+                wrap_span("(03:45)"),
                 ]
     input_list = []
     prepare_output(sut, [], input_list)
@@ -174,7 +176,7 @@ def test_prepare_output_discharging_small_other_order():
     ]
     expected = [wrap_span_fa(FA_LAPTOP),
                 wrap_span_fa(FA_BATTERY_LIST[4], col=color(85)),
-                wrap_span("(01:33)"),
+                wrap_span("(03:45)"),
                 ]
     input_list = []
     prepare_output(sut, [], input_list)
@@ -203,18 +205,18 @@ def test_for_remove_of_battery_bug():
 def test_for_remove_of_battery_bug_second_variant():
     # first battery discharging with 70% and second battery unknown with 0%
     sut = [
-        {"state": State.UNKNOWN, 'percentage': 89, 'time': None,
+        {"state": State.UNKNOWN, 'percentage': 6, 'time': None,
          'unavailable': False, 'design_capacity': 1960, 'full_capacity': 1898},
         {"state": State.DISCHARGING, 'percentage': 0, 'time': None,
          'unavailable': True, 'design_capacity': None, 'full_capacity': None},
-        {"state": State.CHARGING, 'percentage': 6, 'time': parse_time('00:54:00'),
+        {"state": State.CHARGING, 'percentage': 89, 'time': parse_time('00:54:00'),
          'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658},
     ]
-    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
+    expected = [wrap_span_battery_header(1) + wrap_span_fa(FA_QUESTION) + ' ' + wrap_span_fa(FA_BATTERY_LIST[0]) + ' ',
                 wrap_span_battery_header(2) + wrap_span_fa(FA_PLUG, col='yellow') + ' ' +
-                wrap_span_fa(FA_BATTERY_LIST[0]) + ' ',
+                wrap_span_fa(FA_BATTERY_LIST[4]) + ' ',
                 wrap_span("47%", color(47)),
-                wrap_span("(01:33)")
+                wrap_span("(00:58)")
                 ]
     input_list = []
     prepare_output(sut, input_list, [])
@@ -241,14 +243,6 @@ def test_for_remove_of_battery_bug_with_indicator():
     assert input_list == expected, "output is not according to specifications"
 
 
-def test_average_without_bug():
-    assert battery.__calculate_avg_percentage(150, 2, False) == 75, "average is wrong"
-
-
-def test_average_with_bug():
-    assert battery.__calculate_avg_percentage(150, 3, True) == 75, "average is wrong"
-
-
 @pytest.mark.parametrize(
     "input_state, expected_state",
     [
@@ -269,3 +263,18 @@ def test_average_with_bug():
 )
 def test_system_battery_status(input_state, expected_state):
     assert discern_system_states(input_state) == expected_state, "system battery state was not as expected."
+
+
+@pytest.mark.parametrize(
+    "bat, expected",
+    [
+        ({"state": State.DISCHARGING, 'percentage': 0, 'time': None,
+         'unavailable': True, 'design_capacity': None, 'full_capacity': None}, True),
+        ({"state": State.UNKNOWN, 'percentage': 0, 'time': None,
+         'unavailable': True, 'design_capacity': None, 'full_capacity': None}, True),
+        ({"state": State.FULL, 'percentage': 100, 'time': None,
+         'unavailable': False, 'design_capacity': 2010, 'full_capacity': 1658}, False),
+    ]
+)
+def test_is_buggy(bat: Dict, expected: bool):
+    assert is_buggy(bat) == expected, "is buggy method reported wrongly"

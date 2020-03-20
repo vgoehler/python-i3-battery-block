@@ -82,6 +82,7 @@ def discern_loading_state(percentage: int, color: str = None) -> str:
     :param percentage: for the load state of the battery
     :return: a span element
     """
+    assert percentage in range(0, 101)
     idx = len(FA_BATTERY_LIST) * percentage // 100
     # 100 % produces one not valid entry
     idx = len(FA_BATTERY_LIST) - 1 if idx == len(FA_BATTERY_LIST) else idx
